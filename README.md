@@ -22,7 +22,6 @@ Reducir las barreras de comunicación entre personas sordas, con discapacidad au
 | Aprendizaje automático | TensorFlow / PyTorch (clasificador sobre landmarks) |
 | API | FastAPI / Flask |
 | Interfaz web | HTML, CSS, JavaScript (MediaDevices) |
-| Despliegue | Docker |
 
 **Enfoque:** se usan modelos y corpora preentrenados (evitando entrenar desde cero) y se aplica ajuste fino (transfer learning) sobre el corpus de lengua de señas en español (p. ej. Sign4all / LSE_UVIGO).
 

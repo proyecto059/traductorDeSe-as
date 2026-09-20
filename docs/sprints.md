@@ -16,7 +16,6 @@ Cada sprint se compone de: **Meta**, **Acciones** y **MVP** (producto mínimo vi
     - **TensorFlow/PyTorch**: cargar el clasificador preentrenado y hacer ajuste fino.
     - **FastAPI/Flask**: API que expone los módulos.
     - **HTML/CSS/JS + MediaDevices**: interfaz web con la cámara del navegador.
-    - **Docker**: empaquetado y despliegue.
   - Investigar modelos preentrenados disponibles (MediaPipe, Hugging Face, GitHub, Kaggle).
   - Evaluar corpora públicos en español: Sign4all (LSE), LSE_UVIGO y variantes para LSM; verificar licencias y formatos.
 - **MVP:** Documento de selección con la tabla tecnología → para qué se usa, y los modelos/corpora elegidos con su licencia.
@@ -98,7 +97,7 @@ Cada sprint se compone de: **Meta**, **Acciones** y **MVP** (producto mínimo vi
 
 - **Meta:** Publicar la aplicación y documentar su instalación y uso.
 - **Acciones:**
-  - Empaquetar la aplicación (Docker, requisitos, guía de ejecución).
+  - Preparar la aplicación para su despliegue (requisitos, guía de ejecución).
   - Redactar documentación técnica y de uso.
   - Desplegar en servidor o dirección compartible.
 - **MVP:** Aplicación publicada con documentación de instalación y uso.
