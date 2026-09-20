@@ -32,7 +32,6 @@ Reduce las barreras de comunicación entre personas sordas, con discapacidad aud
 
 - **Backend (Python):** captura y procesamiento de video (OpenCV), detección de manos (MediaPipe), clasificación de landmarks (TensorFlow/PyTorch) y API (FastAPI/Flask).
 - **Frontend (HTML/CSS/JS):** interfaz web que accede a la cámara mediante la API MediaDevices, envía los frames al backend y muestra los resultados.
-- **Despliegue:** empaquetado con Docker para facilitar su puesta en producción.
 
 ## Enfoque de desarrollo
 
