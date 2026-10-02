@@ -16,6 +16,27 @@ LANDMARK_COLOR = (50, 200, 120)
 CONEXION_COLOR = (255, 255, 255)
 
 
+def _reporthook_descarga(bloques, tam_bloque, tam_total):
+    leido = bloques * tam_bloque
+    if tam_total and tam_total > 0:
+        fraccion = min(1.0, leido / tam_total)
+        ancho = 30
+        lleno = int(ancho * fraccion)
+        print(
+            f"\rDescargando hand_landmarker.task: "
+            f"[{'#' * lleno}{'-' * (ancho - lleno)}] {fraccion * 100:5.1f}%",
+            end="",
+            flush=True,
+        )
+    else:
+        print(
+            f"\rDescargando hand_landmarker.task: "
+            f"{leido / 1024 / 1024:.1f} MB",
+            end="",
+            flush=True,
+        )
+
+
 def asegurar_modelo() -> Path:
     if MODELO_RUTA.exists():
         return MODELO_RUTA
@@ -23,8 +44,8 @@ def asegurar_modelo() -> Path:
     import urllib.request
 
     MODELO_RUTA.parent.mkdir(parents=True, exist_ok=True)
-    print(f"Descargando modelo: {MODELO_URL}")
-    urllib.request.urlretrieve(MODELO_URL, MODELO_RUTA)
+    urllib.request.urlretrieve(MODELO_URL, MODELO_RUTA, _reporthook_descarga)
+    print()
     return MODELO_RUTA
 
 
