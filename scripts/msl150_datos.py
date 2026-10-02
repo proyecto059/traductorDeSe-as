@@ -26,6 +26,54 @@ MODELO_HOLISTIC_RUTA = RUTAS_PROYECTO / "models" / "holistic_landmarker.task"
 INDICES_POSE = [i for i in range(33) if i < 25 or i > 32]
 
 
+def formato_tamano(byte):
+    byte = float(byte)
+    for unidad in ("B", "KB", "MB", "GB"):
+        if byte < 1024 or unidad == "GB":
+            if unidad == "B":
+                return f"{int(byte)} {unidad}"
+            return f"{byte:.1f} {unidad}"
+        byte /= 1024
+
+
+def mostrar_progreso(descripcion, actual, total=None):
+    ancho = 30
+    prefijo = f"\r{descripcion}: "
+    if total:
+        fraccion = actual / total
+        lleno = int(ancho * fraccion)
+        barra = "#" * lleno + "-" * (ancho - lleno)
+        print(
+            f"{prefijo}[{barra}] {fraccion * 100:5.1f}% "
+            f"{formato_tamano(actual)}/{formato_tamano(total)}",
+            end="",
+            flush=True,
+        )
+    else:
+        print(f"{prefijo}{formato_tamano(actual)}", end="", flush=True)
+
+
+def descargar_archivo(descripcion, url, destino, tamano_total=None, chunk=256 * 1024):
+    import urllib.request
+
+    destino = Path(destino)
+    destino.parent.mkdir(parents=True, exist_ok=True)
+    solicitud = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0"})
+    with urllib.request.urlopen(solicitud) as r, destino.open("wb") as f:
+        total = tamano_total or r.headers.get("Content-Length")
+        total = int(total) if total else None
+        leido = 0
+        while True:
+            bloque = r.read(chunk)
+            if not bloque:
+                break
+            f.write(bloque)
+            leido += len(bloque)
+            mostrar_progreso(descripcion, leido, total)
+        print()
+    return destino
+
+
 def _clave_directorio(p):
     return int(p.name)
 
