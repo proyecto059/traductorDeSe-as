@@ -16,6 +16,7 @@ from msl150_datos import (
     MODELO_HOLISTIC_RUTA,
     NUM_FRAMES,
     URL_MODELO_HOLISTIC,
+    descargar_archivo,
     extraer_fila_holistic,
 )
 from msl150_modelo import cargar_modelo, predecir_probs
@@ -28,12 +29,11 @@ COLOR_BLANCO = (255, 255, 255)
 def asegurar_modelo_holistic() -> Path:
     if MODELO_HOLISTIC_RUTA.exists():
         return MODELO_HOLISTIC_RUTA
-
-    import urllib.request
-
-    MODELO_HOLISTIC_RUTA.parent.mkdir(parents=True, exist_ok=True)
-    print(f"Descargando modelo holistic: {URL_MODELO_HOLISTIC}")
-    urllib.request.urlretrieve(URL_MODELO_HOLISTIC, MODELO_HOLISTIC_RUTA)
+    descargar_archivo(
+        "Modelo Holistic (.task)",
+        URL_MODELO_HOLISTIC,
+        MODELO_HOLISTIC_RUTA,
+    )
     return MODELO_HOLISTIC_RUTA
 
 

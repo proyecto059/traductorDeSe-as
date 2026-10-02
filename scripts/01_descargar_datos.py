@@ -1,5 +1,4 @@
 import argparse
-import io
 import zipfile
 from pathlib import Path
 
@@ -11,6 +10,7 @@ from msl150_datos import (
     URL_REPO_ZIP,
     URL_ZENODO,
     NUM_FRAMES,
+    descargar_archivo,
 )
 
 TAMANO_CHUNK = 1024 * 1024
@@ -21,13 +21,12 @@ def descargar_github(destino):
         print(f"[SKIP] Ya existe contenido en: {destino}")
         return
 
-    print("Descargando ZIP del repositorio MSL-150-Dataset (subset demo)...")
-    respuesta = requests.get(URL_REPO_ZIP, stream=True, timeout=120)
-    respuesta.raise_for_status()
+    temporal = CARPETA_DATOS.parent / "_repo_demo.zip"
+    descargar_archivo("ZIP MSL-150 (demo)", URL_REPO_ZIP, temporal)
 
     marcador = "/data/sample_npy/"
     clases = set()
-    with zipfile.ZipFile(io.BytesIO(respuesta.content)) as zipf:
+    with zipfile.ZipFile(temporal) as zipf:
         for nombre in zipf.namelist():
             pos = nombre.find(marcador)
             if pos == -1 or nombre.endswith("/"):
@@ -43,6 +42,7 @@ def descargar_github(destino):
             partes = Path(relativo).parts
             if len(partes) >= 3:
                 clases.add(partes[0])
+    temporal.unlink(missing_ok=True)
 
     print(f"[OK] {len(clases)} clases demo descargadas en: {destino}")
 
@@ -64,13 +64,8 @@ def descargar_zenodo(salida):
         if destino.exists():
             print(f"[SKIP] {nombre} ya existe")
             continue
-        total = archivo.get("size", 0)
-        print(f"Descargando {nombre} ({total / 1e9:.2f} GB)...")
-        with requests.get(enlace, stream=True, timeout=120) as r:
-            r.raise_for_status()
-            with destino.open("wb") as f:
-                for chunk in r.iter_content(chunk_size=TAMANO_CHUNK):
-                    f.write(chunk)
+        tamano = archivo.get("size")
+        descargar_archivo(nombre, enlace, destino, tamano_total=tamano, chunk=TAMANO_CHUNK)
         print(f"[OK] {nombre} -> {destino}")
 
     print(
