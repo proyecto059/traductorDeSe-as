@@ -1,0 +1,593 @@
+```html
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Señas AI | Traductor de Lenguaje de Señas Mexicana</title>
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="css/estilos.css">
+
+    <!-- Fuente -->
+    <link rel="preconnect"
+          href="https://fonts.googleapis.com">
+
+    <link rel="preconnect"
+          href="https://fonts.gstatic.com"
+          crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+          rel="stylesheet">
+
+</head>
+
+
+<body>
+
+
+    <!-- ==================================================
+         BARRA LATERAL
+    =================================================== -->
+
+    <aside class="sidebar">
+
+
+        <!-- LOGO -->
+
+        <div class="logo">
+
+            <div class="logo-icon">
+                ✋
+            </div>
+
+            <div>
+
+                <h1>
+                    Señas<span>AI</span>
+                </h1>
+
+                <p>
+                    Traductor de lenguaje de señas Mexicana
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <!-- MENÚ -->
+
+        <nav class="menu">
+
+            <a href="#inicio"
+               class="menu-item active">
+
+                <span>⌂</span>
+
+                Inicio
+
+            </a>
+
+
+            <a href="#historial"
+               class="menu-item">
+
+                <span>◷</span>
+
+                Historial
+
+            </a>
+
+
+            <a href="#informacion"
+               class="menu-item">
+
+                <span>ⓘ</span>
+
+                Información
+
+            </a>
+
+        </nav>
+
+
+        <!-- ESTADO DEL MODELO -->
+
+        <div class="sidebar-bottom">
+
+            <div class="model-card">
+
+                <div class="status-dot"></div>
+
+                <div>
+
+                    <strong>
+                        Modelo IA
+                    </strong>
+
+                    <small id="modelStatus">
+                        Preparado
+                    </small>
+
+                </div>
+
+            </div>
+
+
+            <p class="version">
+                Señas AI
+            </p>
+
+        </div>
+
+    </aside>
+
+
+
+    <!-- ==================================================
+         CONTENIDO PRINCIPAL
+    =================================================== -->
+
+    <main class="main-content"
+          id="inicio">
+
+
+        <!-- HEADER -->
+
+        <header class="topbar">
+
+            <div>
+
+                <p class="welcome">
+                    TRADUCTOR DE LENGUAJE DE SEÑAS MEXICANA
+                </p>
+
+                <h2>
+                    Comunícate con tus manos
+                </h2>
+
+            </div>
+
+
+            <div class="header-status">
+
+                <span class="online-dot"></span>
+
+                Sistema listo
+
+            </div>
+
+        </header>
+
+
+
+        <!-- ==================================================
+             ÁREA DEL TRADUCTOR
+        =================================================== -->
+
+        <section class="translator-container">
+
+
+            <!-- ==================================================
+                 CÁMARA
+            =================================================== -->
+
+            <div class="camera-section">
+
+
+                <div class="section-header">
+
+                    <div>
+
+                        <span class="section-label">
+                            01
+                        </span>
+
+                        <h3>
+                            Cámara
+                        </h3>
+
+                    </div>
+
+
+                    <div class="camera-status"
+                         id="cameraStatus">
+
+                        <span></span>
+
+                        Cámara apagada
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- CÁMARA -->
+
+                <div class="camera-container">
+
+
+                    <video id="video"
+                           autoplay
+                           playsinline>
+                    </video>
+
+
+                    <!-- CANVAS PARA FUTURA IA -->
+
+                    <canvas id="canvas">
+                    </canvas>
+
+
+                    <!-- MENSAJE INICIAL -->
+
+                    <div class="camera-placeholder"
+                         id="cameraPlaceholder">
+
+                        <div class="camera-icon">
+                            📷
+                        </div>
+
+                        <h4>
+                            Tu cámara aparecerá aquí
+                        </h4>
+
+                        <p>
+                            Activa la cámara para comenzar
+                            a detectar las señas.
+                        </p>
+
+                    </div>
+
+
+                    <!-- DETECCIÓN -->
+
+                    <div class="detecting-indicator"
+                         id="detectingIndicator">
+
+                        <span class="pulse"></span>
+
+                        Detectando...
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- BOTONES -->
+
+                <div class="camera-controls">
+
+
+                    <button
+                        class="btn btn-primary"
+                        id="startCamera">
+
+                        <span>
+                            ▶
+                        </span>
+
+                        Iniciar cámara
+
+                    </button>
+
+
+                    <button
+                        class="btn btn-secondary"
+                        id="stopCamera"
+                        disabled>
+
+                        <span>
+                            ■
+                        </span>
+
+                        Detener
+
+                    </button>
+
+
+                </div>
+
+            </div>
+
+
+
+            <!-- ==================================================
+                 TRADUCCIÓN
+            =================================================== -->
+
+            <div class="translation-section">
+
+
+                <div class="section-header">
+
+                    <div>
+
+                        <span class="section-label">
+                            02
+                        </span>
+
+                        <h3>
+                            Traducción
+                        </h3>
+
+                    </div>
+
+
+                    <div class="translation-language">
+                        ES
+                    </div>
+
+                </div>
+
+
+
+                <!-- TARJETA DE TRADUCCIÓN -->
+
+                <div class="translation-card">
+
+
+                    <div class="translation-top">
+
+                        <span class="translation-label">
+                            SEÑA DETECTADA
+                        </span>
+
+                        <span class="confidence"
+                              id="confidence">
+
+                            --%
+
+                        </span>
+
+                    </div>
+
+
+
+                    <!-- SEÑA -->
+
+                    <div class="detected-sign"
+                         id="detectedSign">
+
+                        <span class="empty-icon">
+                            ✋
+                        </span>
+
+                        <p>
+                            Esperando una seña...
+                        </p>
+
+                    </div>
+
+
+
+                    <div class="translation-divider">
+                    </div>
+
+
+
+                    <!-- TRADUCCIÓN -->
+
+                    <div class="translation-label">
+                        TRADUCCIÓN
+                    </div>
+
+
+                    <div class="translation-text"
+                         id="translationText">
+
+                        <span>
+                            La traducción aparecerá aquí
+                        </span>
+
+                    </div>
+
+
+
+                    <!-- BOTONES -->
+
+                    <div class="translation-actions">
+
+
+                        <button
+                            class="action-button"
+                            id="speakButton">
+
+                            🔊
+
+                            <span>
+                                Escuchar
+                            </span>
+
+                        </button>
+
+
+                        <button
+                            class="action-button"
+                            id="clearButton">
+
+                            🗑️
+
+                            <span>
+                                Limpiar
+                            </span>
+
+                        </button>
+
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- ESTADO IA -->
+
+                <div class="ai-status">
+
+
+                    <div class="ai-icon">
+                        ✨
+                    </div>
+
+
+                    <div>
+
+                        <strong id="aiStatusTitle">
+                            Listo para detectar
+                        </strong>
+
+                        <p id="aiStatusText">
+                            Activa la cámara y realiza
+                            una seña frente a ella.
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- ==================================================
+             HISTORIAL
+        =================================================== -->
+
+        <section class="history-section"
+                 id="historial">
+
+
+            <div class="section-title">
+
+
+                <div>
+
+                    <span class="section-label">
+                        03
+                    </span>
+
+                    <h3>
+                        Historial de traducciones
+                    </h3>
+
+                </div>
+
+
+                <button
+                    class="clear-history"
+                    id="clearHistory">
+
+                    Limpiar historial
+
+                </button>
+
+            </div>
+
+
+
+            <div class="history-container"
+                 id="historyContainer">
+
+
+                <div class="empty-history"
+                     id="emptyHistory">
+
+                    <span>
+                        📝
+                    </span>
+
+                    <p>
+                        Aún no hay traducciones.
+                    </p>
+
+                    <small>
+                        Las señas detectadas aparecerán aquí.
+                    </small>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- ==================================================
+             INFORMACIÓN
+        =================================================== -->
+
+        <section class="info-section"
+                 id="informacion">
+
+
+            <div class="info-card">
+
+
+                <div class="info-icon">
+                    💡
+                </div>
+
+
+                <div>
+
+                    <h3>
+                        ¿Cómo funciona?
+                    </h3>
+
+                    <p>
+                        Señas AI utiliza la cámara de tu
+                        dispositivo para capturar los
+                        movimientos de las manos y
+                        posteriormente procesarlos mediante
+                        un modelo de inteligencia artificial
+                        capaz de reconocer lenguaje de señas.
+                    </p>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- ==================================================
+             FOOTER
+        =================================================== -->
+
+        <footer>
+
+            <p>
+                © 2026 Señas AI · Traductor de Lenguaje de Señas
+            </p>
+
+            <span>
+                Proyecto de la materia Tecnicas de Inteligencia Artificial
+            </span>
+
+        </footer>
+
+
+    </main>
+
+
+    <!-- JAVASCRIPT -->
+
+    <script src="js/app.js"></script>
+
+
+</body>
+
+</html>
+```
