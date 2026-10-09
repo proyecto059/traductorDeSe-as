@@ -58,7 +58,7 @@ def descargar_archivo(descripcion, url, destino, tamano_total=None, chunk=256 * 
 
     destino = Path(destino)
     destino.parent.mkdir(parents=True, exist_ok=True)
-    solicitud = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0"})
+    solicitud = urllib.request.Request(url)
     with urllib.request.urlopen(solicitud) as r, destino.open("wb") as f:
         total = tamano_total or r.headers.get("Content-Length")
         total = int(total) if total else None

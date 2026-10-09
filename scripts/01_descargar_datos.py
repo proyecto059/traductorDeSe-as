@@ -59,7 +59,7 @@ def descargar_zenodo(salida):
 
     for archivo in archivos:
         nombre = archivo["key"]
-        enlace = archivo["links"]["download"]
+        enlace = archivo["links"].get("download") or archivo["links"]["self"]
         destino = salida / nombre
         if destino.exists():
             print(f"[SKIP] {nombre} ya existe")
