@@ -1,8 +1,11 @@
 import argparse
+import sys
 import threading
 import time
 from collections import deque
 from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "src"))
 
 import cv2
 import mediapipe as mp

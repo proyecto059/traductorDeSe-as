@@ -1,4 +1,17 @@
+# Python
 __pycache__/
-*.pyc
-models/
+*.py[cod]
+*.egg-info/
+venv/
+.venv/
+
+# Pruebas
+.pytest_cache/
+
+# Datos y modelos descargados (se generan con scripts/)
 data/
+models/
+
+# IDE
+.vscode/
+.idea/
