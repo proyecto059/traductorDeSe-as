@@ -131,7 +131,7 @@ async function iniciarCamara() {
             "flex";
 
 
-        modelStatus.textContent =
+        if (modelStatus) modelStatus.textContent =
             "Detectando";
 
 
@@ -210,7 +210,7 @@ function detenerCamara() {
         "none";
 
 
-    modelStatus.textContent =
+    if (modelStatus) modelStatus.textContent =
         "Preparado";
 
 
@@ -675,6 +675,54 @@ window.addEventListener(
 );
 
 
+/* ==========================================
+   FUNCIONALIDAD PARA AGREGAR TEXTO
+========================================== */
+
+const userText = document.getElementById("userText");
+const characterCount = document.getElementById("characterCount");
+const showUserText = document.getElementById("showUserText");
+const clearUserText = document.getElementById("clearUserText");
+const userTextResult = document.getElementById("userTextResult");
+const userTextPreview = document.getElementById("userTextPreview");
+const textInputMessage = document.getElementById("textInputMessage");
+
+// Actualizar contador de caracteres
+userText.addEventListener("input", () => {
+    characterCount.textContent =
+        `${userText.value.length} / 1000 caracteres`;
+
+    textInputMessage.textContent = "";
+});
+
+// Mostrar el texto agregado
+showUserText.addEventListener("click", () => {
+    const texto = userText.value.trim();
+
+    if (texto === "") {
+        textInputMessage.textContent =
+            "Escribe una palabra o una oración antes de continuar.";
+
+        userText.focus();
+        return;
+    }
+
+    userTextPreview.textContent = texto;
+    userTextResult.hidden = false;
+
+    textInputMessage.textContent = "";
+});
+
+// Limpiar el campo y el resultado
+clearUserText.addEventListener("click", () => {
+    userText.value = "";
+    userTextPreview.textContent = "";
+    userTextResult.hidden = true;
+    characterCount.textContent = "0 / 1000 caracteres";
+    textInputMessage.textContent = "";
+
+    userText.focus();
+});
 /* =========================================================
    PRUEBA DEL SISTEMA
 =========================================================
@@ -682,14 +730,4 @@ window.addEventListener(
    Para comprobar que la interfaz funciona antes
    de integrar la IA, abre la consola del navegador
    (F12) y escribe:
-
-       mostrarResultado("Hola", "Hola", 96);
-
-   También puedes probar:
-
-       mostrarResultado("Gracias", "Gracias", 92);
-
-   Cuando integremos el modelo, estas llamadas
-   vendrán automáticamente de la predicción.
-========================================================= */
-
+   a*/

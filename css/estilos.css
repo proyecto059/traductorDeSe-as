@@ -1523,3 +1523,65 @@ footer {
 .model-card small {
     color: #EDE6D8 !important;
 }
+
+/* Texto para traducir: campo amplio y panel de señas al lado */
+.text-input-section {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) minmax(280px, 1fr) !important;
+    gap: 14px 20px !important;
+    align-items: stretch;
+}
+
+.text-input-section > .section-header {
+    grid-column: 1 / -1;
+}
+
+.text-input-card,
+.sign-output-card {
+    box-sizing: border-box;
+    width: 100%;
+    min-width: 0;
+    padding: 20px;
+    background: #fff !important;
+    border: 1px solid #D6CEC0;
+    border-radius: 18px;
+}
+
+#userText {
+    display: block;
+    box-sizing: border-box;
+    width: 100% !important;
+    min-height: 180px !important;
+    padding: 13px;
+    font: inherit;
+}
+
+.sign-output-card h4 {
+    margin: 0 0 12px;
+}
+
+.sign-output-placeholder {
+    min-height: 220px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    border: 1px dashed #D6CEC0;
+    border-radius: 12px;
+    background: #fff;
+    color: #7A6A5E;
+    text-align: center;
+}
+
+@media (max-width: 750px) {
+    .text-input-section {
+        grid-template-columns: 1fr !important;
+    }
+
+    .text-input-section > .section-header {
+        grid-column: 1;
+    }
+}
+body {
+    outline: 5px solid red !important;
+}
