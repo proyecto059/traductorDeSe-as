@@ -1,733 +1,184 @@
+/* SeñasAI · interfaz. Las funciones detectarSena() y mostrarResultado() son los puntos
+   donde se conectará el modelo de IA; mientras tanto no se muestra ningún resultado. */
+const $ = id => document.getElementById(id);
+const video = $("video"), startCamera = $("startCamera"), stopCamera = $("stopCamera"),
+  cameraPlaceholder = $("cameraPlaceholder"), cameraStatus = $("cameraStatus"), cameraStatusText = $("cameraStatusText"),
+  cameraMsg = $("cameraMsg"), detectingIndicator = $("detectingIndicator"), detectedSign = $("detectedSign"),
+  translationText = $("translationText"), confidence = $("confidence"), aiStatusTitle = $("aiStatusTitle"),
+  aiStatusText = $("aiStatusText"), historyContainer = $("historyContainer"), emptyHistory = $("emptyHistory");
+let stream = null, detectionInterval = null, ultimaTraduccion = "", historial = [];
+const SIGN_EMPTY = '<svg class="ic"><use href="#i-hand"/></svg><span>Esperando una seña…</span>';
+const MSG_LISTO = "Listo para conectar el modelo.", TXT_LISTO = " Cuando exista, aquí verás cada seña con su traducción.";
 
-/* =========================================================
-   SEÑAS AI
-   JAVASCRIPT
-========================================================= */
+/* Navegación móvil */
+const navToggle = $("navToggle"), navMenu = $("navMenu");
+navToggle.addEventListener("click", () => {
+  const abierto = navMenu.classList.toggle("open");
+  navToggle.setAttribute("aria-expanded", abierto);
+});
+navMenu.addEventListener("click", e => { if (e.target.tagName === "A") { navMenu.classList.remove("open"); navToggle.setAttribute("aria-expanded", "false"); } });
 
-
-/* =========================================================
-   ELEMENTOS
-========================================================= */
-
-const video =
-    document.getElementById("video");
-
-const canvas =
-    document.getElementById("canvas");
-
-const startCamera =
-    document.getElementById("startCamera");
-
-const stopCamera =
-    document.getElementById("stopCamera");
-
-const cameraPlaceholder =
-    document.getElementById("cameraPlaceholder");
-
-const cameraStatus =
-    document.getElementById("cameraStatus");
-
-const detectingIndicator =
-    document.getElementById("detectingIndicator");
-
-const detectedSign =
-    document.getElementById("detectedSign");
-
-const translationText =
-    document.getElementById("translationText");
-
-const confidence =
-    document.getElementById("confidence");
-
-const speakButton =
-    document.getElementById("speakButton");
-
-const clearButton =
-    document.getElementById("clearButton");
-
-const clearHistoryButton =
-    document.getElementById("clearHistory");
-
-const historyContainer =
-    document.getElementById("historyContainer");
-
-const emptyHistory =
-    document.getElementById("emptyHistory");
-
-const modelStatus =
-    document.getElementById("modelStatus");
-
-const aiStatusTitle =
-    document.getElementById("aiStatusTitle");
-
-const aiStatusText =
-    document.getElementById("aiStatusText");
-
-
-/* =========================================================
-   VARIABLES
-========================================================= */
-
-let stream = null;
-
-let detectionInterval = null;
-
-let ultimaSena = "";
-
-let ultimaTraduccion = "";
-
-let historial = [];
-
-
-/* =========================================================
-   INICIAR CÁMARA
-========================================================= */
+/* Cámara */
+function estadoCamara(activa) {
+  cameraStatus.classList.toggle("on", activa);
+  cameraStatusText.textContent = activa ? "Cámara activa" : "Cámara apagada";
+  video.style.display = activa ? "block" : "none";
+  cameraPlaceholder.style.display = activa ? "none" : "flex";
+  detectingIndicator.hidden = !activa;
+  startCamera.disabled = activa; stopCamera.disabled = !activa;
+}
 
 async function iniciarCamara() {
-
-    try {
-
-        stream =
-            await navigator.mediaDevices.getUserMedia({
-
-                video: {
-
-                    width: {
-                        ideal: 1280
-                    },
-
-                    height: {
-                        ideal: 720
-                    },
-
-                    facingMode: "user"
-
-                },
-
-                audio: false
-
-            });
-
-
-        video.srcObject = stream;
-
-        video.style.display = "block";
-
-        cameraPlaceholder.style.display = "none";
-
-
-        startCamera.disabled = true;
-
-        stopCamera.disabled = false;
-
-
-        cameraStatus.classList.add("active");
-
-        cameraStatus.innerHTML =
-            "<span></span>Cámara activa";
-
-
-        detectingIndicator.style.display =
-            "flex";
-
-
-        if (modelStatus) modelStatus.textContent =
-            "Detectando";
-
-
-        aiStatusTitle.textContent =
-            "Detectando señas";
-
-
-        aiStatusText.textContent =
-            "Realiza una seña frente a la cámara.";
-
-
-        iniciarDeteccion();
-
-
-    }
-
-    catch (error) {
-
-        console.error(
-            "Error al acceder a la cámara:",
-            error
-        );
-
-
-        alert(
-            "No se pudo acceder a la cámara.\n\n" +
-            "Verifica que hayas permitido el acceso " +
-            "a la cámara en tu navegador."
-        );
-
-    }
-
+  cameraMsg.textContent = "";
+  if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+    cameraMsg.textContent = "Este navegador no permite usar la cámara. Abre la página desde http://localhost o con HTTPS.";
+    return;
+  }
+  try {
+    stream = await navigator.mediaDevices.getUserMedia({ video: { width: { ideal: 1280 }, height: { ideal: 720 }, facingMode: "user" }, audio: false });
+    video.srcObject = stream;
+    estadoCamara(true);
+    aiStatusTitle.textContent = "Cámara activa, modelo sin conectar.";
+    aiStatusText.lastChild.textContent = " Por ahora no se reconocen señas.";
+    iniciarDeteccion();
+  } catch (error) {
+    console.error("Error al acceder a la cámara:", error);
+    cameraMsg.textContent = "No se pudo acceder a la cámara. Permite el acceso en tu navegador y vuelve a intentarlo.";
+  }
 }
-
-
-/* =========================================================
-   DETENER CÁMARA
-========================================================= */
 
 function detenerCamara() {
-
-    if (stream) {
-
-        stream
-            .getTracks()
-            .forEach(track => track.stop());
-
-        stream = null;
-
-    }
-
-
-    video.srcObject = null;
-
-    video.style.display = "none";
-
-    cameraPlaceholder.style.display =
-        "flex";
-
-
-    startCamera.disabled = false;
-
-    stopCamera.disabled = true;
-
-
-    cameraStatus.classList.remove(
-        "active"
-    );
-
-
-    cameraStatus.innerHTML =
-        "<span></span>Cámara apagada";
-
-
-    detectingIndicator.style.display =
-        "none";
-
-
-    if (modelStatus) modelStatus.textContent =
-        "Preparado";
-
-
-    aiStatusTitle.textContent =
-        "Listo para detectar";
-
-
-    aiStatusText.textContent =
-        "Activa la cámara y realiza una seña frente a ella.";
-
-
-    detenerDeteccion();
-
+  if (stream) { stream.getTracks().forEach(t => t.stop()); stream = null; }
+  video.srcObject = null;
+  estadoCamara(false);
+  aiStatusTitle.textContent = MSG_LISTO;
+  aiStatusText.lastChild.textContent = TXT_LISTO;
+  detenerDeteccion();
 }
 
-
-/* =========================================================
-   INICIAR DETECCIÓN
-========================================================= */
-
-function iniciarDeteccion() {
-
-    /*
-     * ESTA PARTE SE UTILIZARÁ DESPUÉS
-     * PARA CONECTAR EL MODELO DE IA.
-     */
-
-    detectionInterval =
-        setInterval(() => {
-
-            detectarSena();
-
-        }, 500);
-
-}
-
-
-/* =========================================================
-   DETENER DETECCIÓN
-========================================================= */
-
-function detenerDeteccion() {
-
-    if (detectionInterval) {
-
-        clearInterval(
-            detectionInterval
-        );
-
-        detectionInterval = null;
-
-    }
-
-}
-
-
-/* =========================================================
-   DETECTAR SEÑA
-========================================================= */
+function iniciarDeteccion() { detectionInterval = setInterval(detectarSena, 500); }
+function detenerDeteccion() { clearInterval(detectionInterval); detectionInterval = null; }
 
 function detectarSena() {
-
-    /*
-     * =====================================================
-     * AQUÍ SE INTEGRARÁ EL MODELO
-     * =====================================================
-     *
-     * Ejemplo:
-     *
-     * const resultado =
-     *      await modelo.predict(video);
-     *
-     *
-     * mostrarResultado(
-     *      resultado.sena,
-     *      resultado.traduccion,
-     *      resultado.confianza
-     * );
-     *
-     * =====================================================
-     */
-
-
-    // Actualmente no hacemos predicciones.
-
-
+  /* AQUÍ SE INTEGRARÁ EL MODELO:
+     const r = await modelo.predict(video);
+     mostrarResultado(r.sena, r.traduccion, r.confianza); */
 }
 
-
-/* =========================================================
-   MOSTRAR RESULTADO
-========================================================= */
-
-function mostrarResultado(
-    sena,
-    traduccion,
-    porcentaje
-) {
-
-    ultimaSena = sena;
-
-    ultimaTraduccion = traduccion;
-
-
-    /* SEÑA DETECTADA */
-
-    detectedSign.innerHTML = `
-
-        <span class="empty-icon">
-            ✋
-        </span>
-
-        <p>
-            ${sena}
-        </p>
-
-    `;
-
-
-    /* TRADUCCIÓN */
-
-    translationText.innerHTML = `
-        ${traduccion}
-    `;
-
-
-    /* CONFIANZA */
-
-    confidence.textContent =
-        Math.round(porcentaje) + "%";
-
-
-    /* ESTADO */
-
-    aiStatusTitle.textContent =
-        "Seña detectada";
-
-
-    aiStatusText.textContent =
-        "El modelo ha reconocido una seña.";
-
-
-    /* HISTORIAL */
-
-    agregarHistorial(
-        traduccion,
-        porcentaje
-    );
-
+function mostrarResultado(sena, traduccion, porcentaje) {
+  ultimaTraduccion = traduccion;
+  detectedSign.className = "sign hit";
+  detectedSign.innerHTML = '<svg class="ic"><use href="#i-hand"/></svg><span></span>';
+  detectedSign.lastChild.textContent = sena;
+  translationText.textContent = traduccion;
+  confidence.textContent = Math.round(porcentaje) + "%";
+  aiStatusTitle.textContent = "Seña reconocida.";
+  agregarHistorial(traduccion, porcentaje);
 }
 
-
-/* =========================================================
-   AGREGAR HISTORIAL
-========================================================= */
-
-function agregarHistorial(
-    traduccion,
-    porcentaje
-) {
-
-    const ultimo =
-        historial.length > 0
-            ? historial[0]
-            : null;
-
-
-    /*
-     * Evitar repetir la misma palabra
-     */
-
-    if (
-        ultimo &&
-        ultimo.texto === traduccion
-    ) {
-
-        return;
-
-    }
-
-
-    const ahora =
-        new Date();
-
-
-    const hora =
-        ahora.toLocaleTimeString(
-            "es-MX",
-            {
-                hour: "2-digit",
-                minute: "2-digit"
-            }
-        );
-
-
-    const nuevoElemento = {
-
-        texto: traduccion,
-
-        confianza:
-            Math.round(porcentaje),
-
-        hora: hora
-
-    };
-
-
-    historial.unshift(
-        nuevoElemento
-    );
-
-
-    /*
-     * Máximo 20 elementos
-     */
-
-    if (historial.length > 20) {
-
-        historial.pop();
-
-    }
-
-
-    mostrarHistorial();
-
+/* Historial */
+function agregarHistorial(texto, porcentaje) {
+  if (historial[0] && historial[0].texto === texto) return;
+  const hora = new Date().toLocaleTimeString("es-MX", { hour: "2-digit", minute: "2-digit" });
+  historial.unshift({ texto, confianza: Math.round(porcentaje), hora });
+  if (historial.length > 20) historial.pop();
+  mostrarHistorial();
 }
-
-
-/* =========================================================
-   MOSTRAR HISTORIAL
-========================================================= */
 
 function mostrarHistorial() {
-
-    historyContainer.innerHTML = "";
-
-
-    if (historial.length === 0) {
-
-        historyContainer.appendChild(
-            emptyHistory
-        );
-
-        return;
-
-    }
-
-
-    historial.forEach(item => {
-
-
-        const elemento =
-            document.createElement("div");
-
-
-        elemento.className =
-            "history-item";
-
-
-        elemento.innerHTML = `
-
-            <div class="history-left">
-
-                <div class="history-icon">
-                    ✋
-                </div>
-
-                <div>
-
-                    <div class="history-word">
-                        ${item.texto}
-                    </div>
-
-                    <div class="history-time">
-                        ${item.hora}
-                    </div>
-
-                </div>
-
-            </div>
-
-
-            <div class="history-confidence">
-
-                ${item.confianza}%
-
-            </div>
-
-        `;
-
-
-        historyContainer.appendChild(
-            elemento
-        );
-
-    });
-
+  historyContainer.textContent = "";
+  if (!historial.length) { historyContainer.appendChild(emptyHistory); return; }
+  historial.forEach(item => {
+    const fila = document.createElement("div");
+    fila.className = "history-item";
+    const izq = document.createElement("div");
+    const palabra = document.createElement("div"); palabra.className = "history-word"; palabra.textContent = item.texto;
+    const hora = document.createElement("div"); hora.className = "history-time"; hora.textContent = item.hora;
+    izq.append(palabra, hora);
+    const conf = document.createElement("div"); conf.className = "history-confidence"; conf.textContent = item.confianza + "%";
+    fila.append(izq, conf);
+    historyContainer.appendChild(fila);
+  });
 }
-
-
-/* =========================================================
-   LIMPIAR TRADUCCIÓN
-========================================================= */
 
 function limpiarTraduccion() {
-
-    ultimaSena = "";
-
-    ultimaTraduccion = "";
-
-
-    detectedSign.innerHTML = `
-
-        <span class="empty-icon">
-            ✋
-        </span>
-
-        <p>
-            Esperando una seña...
-        </p>
-
-    `;
-
-
-    translationText.innerHTML = `
-
-        <span>
-            La traducción aparecerá aquí
-        </span>
-
-    `;
-
-
-    confidence.textContent =
-        "--%";
-
-
-    aiStatusTitle.textContent =
-        "Listo para detectar";
-
-
-    aiStatusText.textContent =
-        "Activa la cámara y realiza una seña frente a ella.";
-
+  ultimaTraduccion = "";
+  detectedSign.className = "sign"; detectedSign.innerHTML = SIGN_EMPTY;
+  translationText.innerHTML = '<span class="ph">Esperando una seña para traducir.</span>';
+  confidence.textContent = "--%";
+  aiStatusTitle.textContent = MSG_LISTO; aiStatusText.lastChild.textContent = TXT_LISTO;
 }
-
-
-/* =========================================================
-   ESCUCHAR TRADUCCIÓN
-========================================================= */
 
 function escucharTraduccion() {
-
-    if (!ultimaTraduccion) {
-
-        alert(
-            "Todavía no hay una traducción."
-        );
-
-        return;
-
-    }
-
-
-    if (!("speechSynthesis" in window)) {
-
-        alert(
-            "Tu navegador no soporta la función de voz."
-        );
-
-        return;
-
-    }
-
-
-    window.speechSynthesis.cancel();
-
-
-    const mensaje =
-        new SpeechSynthesisUtterance(
-            ultimaTraduccion
-        );
-
-
-    mensaje.lang =
-        "es-MX";
-
-
-    mensaje.rate =
-        0.9;
-
-
-    mensaje.pitch =
-        1;
-
-
-    window.speechSynthesis.speak(
-        mensaje
-    );
-
+  if (!ultimaTraduccion) { cameraMsg.textContent = "Todavía no hay una traducción para escuchar."; return; }
+  if (!("speechSynthesis" in window)) { cameraMsg.textContent = "Tu navegador no soporta la función de voz."; return; }
+  cameraMsg.textContent = "";
+  speechSynthesis.cancel();
+  const voz = new SpeechSynthesisUtterance(ultimaTraduccion);
+  voz.lang = "es-MX"; voz.rate = 0.9;
+  speechSynthesis.speak(voz);
 }
 
+function limpiarHistorial() { historial = []; mostrarHistorial(); }
 
-/* =========================================================
-   LIMPIAR HISTORIAL
-========================================================= */
+startCamera.addEventListener("click", iniciarCamara);
+stopCamera.addEventListener("click", detenerCamara);
+$("clearButton").addEventListener("click", limpiarTraduccion);
+$("speakButton").addEventListener("click", escucharTraduccion);
+$("clearHistory").addEventListener("click", limpiarHistorial);
+window.addEventListener("beforeunload", detenerCamara);
 
-function limpiarHistorial() {
+/* Texto a señas */
+const userText = $("userText"), characterCount = $("characterCount"), textInputMessage = $("textInputMessage"),
+  userTextResult = $("userTextResult"), userTextPreview = $("userTextPreview"), signStage = $("signStage");
+const STAGE_VACIO = '<svg class="ic ic-xl"><use href="#i-hand"/></svg><p>Las señas aparecerán aquí cuando agregues un texto.</p>';
 
-    historial = [];
-
-    mostrarHistorial();
-
-}
-
-
-/* =========================================================
-   EVENTOS
-========================================================= */
-
-startCamera.addEventListener(
-    "click",
-    iniciarCamara
-);
-
-
-stopCamera.addEventListener(
-    "click",
-    detenerCamara
-);
-
-
-clearButton.addEventListener(
-    "click",
-    limpiarTraduccion
-);
-
-
-speakButton.addEventListener(
-    "click",
-    escucharTraduccion
-);
-
-
-clearHistoryButton.addEventListener(
-    "click",
-    limpiarHistorial
-);
-
-
-/* =========================================================
-   CERRAR PÁGINA
-========================================================= */
-
-window.addEventListener(
-    "beforeunload",
-    () => {
-
-        detenerCamara();
-
-    }
-);
-
-
-/* ==========================================
-   FUNCIONALIDAD PARA AGREGAR TEXTO
-========================================== */
-
-const userText = document.getElementById("userText");
-const characterCount = document.getElementById("characterCount");
-const showUserText = document.getElementById("showUserText");
-const clearUserText = document.getElementById("clearUserText");
-const userTextResult = document.getElementById("userTextResult");
-const userTextPreview = document.getElementById("userTextPreview");
-const textInputMessage = document.getElementById("textInputMessage");
-
-// Actualizar contador de caracteres
 userText.addEventListener("input", () => {
-    characterCount.textContent =
-        `${userText.value.length} / 1000 caracteres`;
-
-    textInputMessage.textContent = "";
+  characterCount.textContent = userText.value.length + " / 1000 caracteres";
+  textInputMessage.textContent = "";
 });
 
-// Mostrar el texto agregado
-showUserText.addEventListener("click", () => {
-    const texto = userText.value.trim();
-
-    if (texto === "") {
-        textInputMessage.textContent =
-            "Escribe una palabra o una oración antes de continuar.";
-
-        userText.focus();
-        return;
-    }
-
-    userTextPreview.textContent = texto;
-    userTextResult.hidden = false;
-
-    textInputMessage.textContent = "";
+$("showUserText").addEventListener("click", () => {
+  const texto = userText.value.trim();
+  if (!texto) { textInputMessage.textContent = "Escribe una palabra o una oración antes de continuar."; userText.focus(); return; }
+  userTextPreview.textContent = texto;
+  userTextResult.hidden = false;
+  /* Muestra las palabras en orden; aquí se insertará la animación de cada seña cuando exista el banco de poses. */
+  signStage.textContent = ""; signStage.classList.add("has");
+  texto.split(/\s+/).forEach(p => {
+    const ficha = document.createElement("span"); ficha.className = "tok";
+    ficha.innerHTML = '<svg class="ic"><use href="#i-hand"/></svg>';
+    ficha.append(p); signStage.appendChild(ficha);
+  });
+  const nota = document.createElement("p"); nota.className = "stage-note";
+  nota.textContent = "Las animaciones de las señas se mostrarán aquí cuando el banco de señas esté integrado.";
+  signStage.appendChild(nota);
 });
 
-// Limpiar el campo y el resultado
-clearUserText.addEventListener("click", () => {
-    userText.value = "";
-    userTextPreview.textContent = "";
-    userTextResult.hidden = true;
-    characterCount.textContent = "0 / 1000 caracteres";
-    textInputMessage.textContent = "";
-
-    userText.focus();
+$("clearUserText").addEventListener("click", () => {
+  userText.value = ""; userTextPreview.textContent = ""; userTextResult.hidden = true;
+  characterCount.textContent = "0 / 1000 caracteres"; textInputMessage.textContent = "";
+  signStage.classList.remove("has"); signStage.innerHTML = STAGE_VACIO;
+  userText.focus();
 });
-/* =========================================================
-   PRUEBA DEL SISTEMA
-=========================================================
 
-   Para comprobar que la interfaz funciona antes
-   de integrar la IA, abre la consola del navegador
-   (F12) y escribe:
-   a*/
+/* Pestañas del traductor */
+const tabs = [...document.querySelectorAll('[role="tab"]')];
+function activarPestana(tab, enfocar) {
+  tabs.forEach(t => {
+    const activa = t === tab;
+    t.setAttribute("aria-selected", activa);
+    t.tabIndex = activa ? 0 : -1;
+    $(t.getAttribute("aria-controls")).hidden = !activa;
+  });
+  if (enfocar) tab.focus();
+}
+tabs.forEach((tab, i) => {
+  tab.addEventListener("click", () => activarPestana(tab));
+  tab.addEventListener("keydown", e => {
+    const d = { ArrowRight: 1, ArrowLeft: -1 }[e.key];
+    if (d) { e.preventDefault(); activarPestana(tabs[(i + d + tabs.length) % tabs.length], true); }
+    else if (e.key === "Home") { e.preventDefault(); activarPestana(tabs[0], true); }
+    else if (e.key === "End") { e.preventDefault(); activarPestana(tabs[tabs.length - 1], true); }
+  });
+});

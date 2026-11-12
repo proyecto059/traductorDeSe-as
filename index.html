@@ -1,220 +1,175 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>Traductor de Lengua de Señas Mexicana (LSM)</title>
-
-    <link rel="stylesheet" href="/TraductorSe/css/estilos.css?v=2">
-
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SeñasAI · Traductor de Lengua de Señas Mexicana (LSM)</title>
+<meta name="description" content="Traductor de Lengua de Señas Mexicana: señas a texto con la cámara y texto a señas. Proyecto universitario en desarrollo.">
+<link rel="icon" href="assets/img/logo.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/estilos.css?v=3">
 </head>
-
 <body>
-    <aside class="sidebar">
-        <div class="logo">
-            <div class="logo-icon"></div>
-            <div>
-                <h1>Señas<span>AI</span></h1>
-                <p>Traductor de lenguaje de señas Mexicana</p>
-            </div>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+<symbol id="i-cam" viewBox="0 0 24 24"><path d="M14.5 4h-5L8 6H5a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-3z"/><circle cx="12" cy="13" r="3.5"/></symbol>
+<symbol id="i-type" viewBox="0 0 24 24"><path d="M4 7V5h16v2M9 19h6M12 5v14"/></symbol>
+<symbol id="i-hand" viewBox="0 0 24 24"><path d="M18 11V6a2 2 0 0 0-4 0M14 10V4a2 2 0 0 0-4 0v2M10 10.5V6a2 2 0 0 0-4 0v8"/><path d="M18 8a2 2 0 1 1 4 0v6a8 8 0 0 1-8 8h-2c-2.8 0-4.5-.9-5.9-2.4L3.4 16a2 2 0 0 1 3.2-2.4L8 15"/></symbol>
+<symbol id="i-vol" viewBox="0 0 24 24"><path d="M11 5 6 9H2v6h4l5 4zM15.5 8.5a5 5 0 0 1 0 7M19 5a10 10 0 0 1 0 14"/></symbol>
+<symbol id="i-trash" viewBox="0 0 24 24"><path d="M3 6h18M8 6V4h8v2M6 6l1 14h10l1-14"/></symbol>
+<symbol id="i-play" viewBox="0 0 24 24"><path d="m7 4 13 8-13 8z"/></symbol>
+<symbol id="i-stop" viewBox="0 0 24 24"><rect x="6" y="6" width="12" height="12" rx="2"/></symbol>
+<symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+<symbol id="i-globe" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/></symbol>
+<symbol id="i-lock" viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></symbol>
+<symbol id="i-eye" viewBox="0 0 24 24"><path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></symbol>
+</defs></svg>
+
+<a class="skip" href="#traductor">Saltar al traductor</a>
+
+<header class="nav" id="inicio-nav">
+  <div class="wrap nav-in">
+    <a class="brand" href="#inicio"><img src="assets/img/logo.svg" width="40" height="40" alt=""><span>Señas<b>AI</b></span></a>
+    <button class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="navMenu">Menú</button>
+    <nav id="navMenu" aria-label="Principal">
+      <a href="#inicio">Inicio</a><a href="#traductor">Traductor</a><a href="#acerca">Acerca del proyecto</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+<section class="hero" id="inicio">
+  <div class="wrap hero-in">
+    <div class="hero-copy">
+      <h1>Rompiendo barreras de comunicación</h1>
+      <p class="lead">Un traductor de Lengua de Señas Mexicana para que personas sordas y oyentes se entiendan: señas a texto con tu cámara y texto a señas.</p>
+      <div class="cta">
+        <a class="btn btn-light" href="#traductor"><svg class="ic"><use href="#i-hand"/></svg>Comenzar a traducir</a>
+        <a class="btn btn-ghost" href="#acerca">Conocer el proyecto</a>
+      </div>
+    </div>
+    <figure class="hero-art">
+      <svg viewBox="0 0 100 100" role="img" aria-labelledby="handT">
+        <g class="bones" fill="none" stroke-linecap="round" stroke-linejoin="round">
+          <path pathLength="1" d="M50 92 34 80 24 66 18 52 14 40"/><path pathLength="1" d="M50 92 38 56 36 40 35 28 34 16"/>
+          <path pathLength="1" d="M50 92 50 52 50 34 50 21 50 8"/><path pathLength="1" d="M50 92 62 56 64 40 65 29 66 18"/>
+          <path pathLength="1" d="M50 92 73 64 77 52 79 43 81 34"/><path pathLength="1" d="M38 56 50 52 62 56 73 64"/>
+        </g>
+        <g class="joints"><circle cx="50" cy="92" r="2.2"/><circle cx="34" cy="80" r="1.6"/><circle cx="24" cy="66" r="1.6"/><circle cx="18" cy="52" r="1.6"/><circle cx="14" cy="40" r="2.2"/>
+        <circle cx="38" cy="56" r="1.6"/><circle cx="36" cy="40" r="1.6"/><circle cx="35" cy="28" r="1.6"/><circle cx="34" cy="16" r="2.2"/>
+        <circle cx="50" cy="52" r="1.6"/><circle cx="50" cy="34" r="1.6"/><circle cx="50" cy="21" r="1.6"/><circle cx="50" cy="8" r="2.2"/>
+        <circle cx="62" cy="56" r="1.6"/><circle cx="64" cy="40" r="1.6"/><circle cx="65" cy="29" r="1.6"/><circle cx="66" cy="18" r="2.2"/>
+        <circle cx="73" cy="64" r="1.6"/><circle cx="77" cy="52" r="1.6"/><circle cx="79" cy="43" r="1.6"/><circle cx="81" cy="34" r="2.2"/></g>
+      </svg>
+    </figure>
+  </div>
+</section>
+
+<section class="trad" id="traductor" aria-labelledby="tradT">
+  <div class="wrap">
+    <div class="trad-head">
+      <h2 id="tradT">Traductor</h2>
+<div class="tabs" role="tablist" aria-label="Tipo de traducción">
+      <button class="tab" role="tab" id="tab-senas" aria-selected="true" aria-controls="panel-senas"><svg class="ic"><use href="#i-cam"/></svg>Señas a texto</button>
+      <button class="tab" role="tab" id="tab-texto" aria-selected="false" aria-controls="panel-texto" tabindex="-1"><svg class="ic"><use href="#i-type"/></svg>Texto a señas</button>
+    </div>
+    </div>
+    <!-- PESTAÑA 1: SEÑAS → TEXTO (cámara a la izquierda, traducción a la derecha) -->
+    <article class="panel panel-split" role="tabpanel" id="panel-senas" aria-labelledby="tab-senas">
+      <section class="card cam-card" aria-label="Cámara">
+        <div class="viewfinder viewfinder-xl">
+          <video id="video" autoplay playsinline muted aria-label="Vista de tu cámara"></video>
+          <canvas id="canvas" aria-hidden="true"></canvas>
+          <div class="vf-empty" id="cameraPlaceholder"><svg class="ic ic-xl"><use href="#i-cam"/></svg><strong>Tu cámara aparecerá aquí</strong><span>Actívala para comenzar. El video se procesa en tu navegador.</span></div>
+          <span class="live" id="detectingIndicator" hidden><span class="dot dot-live"></span>En vivo</span>
+          <i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
         </div>
+        <div class="cam-bar">
+          <div class="row">
+            <button class="btn btn-primary" id="startCamera"><svg class="ic"><use href="#i-play"/></svg>Activar cámara</button>
+            <button class="btn btn-soft" id="stopCamera" disabled><svg class="ic"><use href="#i-stop"/></svg>Detener</button>
+          </div>
+          <p class="status" id="cameraStatus" role="status"><span class="dot"></span><span id="cameraStatusText">Cámara apagada</span></p>
+        </div>
+        <p class="msg" id="cameraMsg" role="alert"></p>
+      </section>
 
-        <nav class="menu">
-            <a href="#inicio" class="menu-item active"><span>⌂</span>Inicio</a>
-            <a href="#historial" class="menu-item"><span>◷</span>Historial</a>
-            <a href="#informacion" class="menu-item"><span>ⓘ</span>Información</a>
-        </nav>
-    </aside>
+      <section class="card tr-card" aria-labelledby="trT">
+        <h3 id="trT">Traducción detectada</h3>
+        <div class="res-card"><span class="lab">Seña reconocida</span>
+          <div class="res-row"><div class="sign" id="detectedSign"><svg class="ic"><use href="#i-hand"/></svg><span>Esperando una seña…</span></div>
+          <span class="conf" id="confidence" title="Confianza del modelo">--%</span></div></div>
+        <div class="res-card res-grow"><span class="lab">Texto traducido</span>
+          <p class="out" id="translationText" aria-live="polite"><span class="ph">Esperando una seña para traducir.</span></p></div>
+        <div class="row">
+          <button class="btn btn-soft" id="speakButton"><svg class="ic"><use href="#i-vol"/></svg>Escuchar</button>
+          <button class="btn btn-soft" id="clearButton"><svg class="ic"><use href="#i-trash"/></svg>Limpiar</button>
+        </div>
+        <details class="hist"><summary>Historial de la sesión</summary>
+          <div id="historyContainer"><p class="ph" id="emptyHistory">Aún no hay traducciones.</p></div>
+          <button class="link-danger" id="clearHistory">Limpiar historial</button>
+        </details>
+      </section>
+    </article>
 
-    <main class="main-content" id="inicio">
-        <div data-shared="header"></div>
+    <!-- PESTAÑA 2: TEXTO → SEÑAS -->
+    <article class="panel" role="tabpanel" id="panel-texto" aria-labelledby="tab-texto" hidden>
+      <header class="panel-h">
+        <div><h3>Texto a señas</h3><p>Escribe una frase y revisa a la derecha su representación en señas.</p></div>
+      </header>
+      <div class="text-grid" id="escribir-texto">
+        <div class="text-col">
+          <label class="lab" for="userText">Tu frase</label>
+          <textarea id="userText" maxlength="1000" rows="8" placeholder="Por ejemplo: Hola, ¿cómo estás?" aria-describedby="characterCount textInputMessage"></textarea>
+          <div class="count-row"><small id="characterCount">0 / 1000 caracteres</small>
+            <p class="msg" id="textInputMessage" role="status"></p></div>
+          <div class="row">
+            <button type="button" class="btn btn-primary" id="showUserText"><svg class="ic"><use href="#i-plus"/></svg>Agregar texto</button>
+            <button type="button" class="btn btn-soft" id="clearUserText"><svg class="ic"><use href="#i-trash"/></svg>Limpiar</button>
+          </div>
+          <div class="user-text-result" id="userTextResult" hidden><span class="lab">Texto agregado</span><p id="userTextPreview"></p></div>
+        </div>
+        <div class="stage" id="signOutput" aria-live="polite">
+          <span class="lab">Representación en señas</span>
+          <div class="stage-box" id="signStage"><svg class="ic ic-xl"><use href="#i-hand"/></svg><p>Las señas aparecerán aquí cuando agregues un texto.</p></div>
+        </div>
+      </div>
+    </article>
+  </div>
+</section>
 
-        <section class="translator-container">
-            <div class="camera-section">
-                <div class="section-header">
-                    <div>
-                        <span class="section-label">01</span>
-                        <h3>Cámara</h3>
-                    </div>
-                    <div class="camera-status" id="cameraStatus">
-                        <span></span>
-                        Cámara apagada
-                    </div>
-                </div>
+<section class="about" id="acerca" aria-labelledby="acT">
+  <div class="wrap">
+    <div class="about-top">
+      <h2 id="acT">Una lengua completa, no una versión manual del español</h2>
+      <p>La Lengua de Señas Mexicana (LSM) es la lengua natural de las comunidades sordas de México. Tiene gramática propia, se expresa con manos, rostro y cuerpo, y está reconocida en el país como lengua nacional. SeñasAI busca acercarla a quienes no la conocen.</p>
+    </div>
+    <h3 class="sub">Cómo funciona</h3>
+    <ol class="steps">
+      <li><strong>Activa la cámara</strong><span>El navegador pide tu permiso. El video no sale de tu equipo.</span></li>
+      <li><strong>Haz una seña</strong><span>Un detector de manos ubica los puntos de referencia de tus manos.</span></li>
+      <li><strong>Lee el texto</strong><span>Un modelo de IA clasificará la seña y mostrará su traducción. Esta etapa está en desarrollo.</span></li>
+    </ol>
+    <h3 class="sub">Para qué sirve</h3>
+    <div class="bento">
+      <div class="tile tile-wide"><svg class="ic"><use href="#i-globe"/></svg><h4>Comunicación en los dos sentidos</h4><p>Traduce de señas a texto y de texto a señas en una sola pantalla.</p></div>
+      <div class="tile"><svg class="ic"><use href="#i-eye"/></svg><h4>Accesible</h4><p>Contraste alto, teclado completo y lectores de pantalla.</p></div>
+      <div class="tile"><svg class="ic"><use href="#i-cam"/></svg><h4>Solo una cámara web</h4><p>No requiere hardware especial.</p></div>
+      <div class="tile tile-wide"><svg class="ic"><use href="#i-lock"/></svg><h4>Privacidad primero</h4><p>La cámara se enciende solo cuando tú lo decides y puedes detenerla en cualquier momento.</p></div>
+    </div>
+  </div>
+</section>
+</main>
 
-                <div class="camera-container">
-                    <video id="video" autoplay playsinline></video>
-                    <canvas id="canvas"></canvas>
+<footer class="foot">
+  <div class="wrap foot-in">
+    <div><a class="brand brand-light" href="#inicio"><img src="assets/img/logo.svg" width="36" height="36" alt=""><span>Señas<b>AI</b></span></a>
+      <p>Traductor de Lengua de Señas Mexicana con inteligencia artificial.</p></div>
+    <p>Proyecto académico de la materia Técnicas de Inteligencia Artificial.<!-- Agrega aquí la universidad y los nombres del equipo --></p>
+  </div>
+</footer>
 
-                    <div class="camera-placeholder" id="cameraPlaceholder">
-                        <div class="camera-icon">📷</div>
-                        <h4>Tu cámara aparecerá aquí</h4>
-                        <p>Activa la cámara para comenzar a detectar las señas.</p>
-                    </div>
-
-                    <div class="detecting-indicator" id="detectingIndicator">
-                        <span class="pulse"></span>
-                        Detectando...
-                    </div>
-                </div>
-
-                <div class="camera-controls">
-                    <button class="btn btn-primary" id="startCamera">
-                        <span>▶</span>
-                        Iniciar cámara
-                    </button>
-                    <button class="btn btn-secondary" id="stopCamera" disabled>
-                        <span>■</span>
-                        Detener
-                    </button>
-                </div>
-            </div>
-
-            <div class="translation-section">
-                <div class="section-header">
-                    <div>
-                        <span class="section-label">02</span>
-                        <h3>Traducción</h3>
-                    </div>
-                    <div class="translation-language">ES</div>
-                </div>
-
-                <div class="translation-card">
-                    <div class="translation-top">
-                        <span class="translation-label">SEÑA DETECTADA</span>
-                        <span class="confidence" id="confidence">--%</span>
-                    </div>
-
-                    <div class="detected-sign" id="detectedSign">
-                        <span class="empty-icon">✋</span>
-                        <p>Esperando una seña...</p>
-                    </div>
-
-                    <div class="translation-divider"></div>
-
-                    <div class="translation-label">TRADUCCIÓN</div>
-                    <div class="translation-text" id="translationText">
-                        <span>La traducción aparecerá aquí</span>
-                    </div>
-
-                    <div class="translation-actions">
-                        <button class="action-button" id="speakButton">
-                            🔊 <span>Escuchar</span>
-                        </button>
-                        <button class="action-button" id="clearButton">
-                            🗑️ <span>Limpiar</span>
-                        </button>
-                    </div>
-                </div>
-
-                <div class="ai-status">
-                    <div class="ai-icon"></div>
-                    <div>
-                        <strong id="aiStatusTitle">Listo para detectar</strong>
-                        <p id="aiStatusText">Activa la cámara y realiza una seña frente a ella.</p>
-                    </div>
-                </div>
-            </div>
-
-            <section class="text-input-section" id="escribir-texto">
-                <div class="section-header">
-                    <div>
-                        <span class="section-label">03</span>
-                        <h3>Texto para traducir</h3>
-                    </div>
-                    <span class="text-badge">Traductor de texto a señas</span>
-                </div>
-
-                <div class="text-input-card">
-                    <label for="userText">Escribe una palabra o una oración</label>
-                    <p class="text-input-description">Ingresa el texto a traducir</p>
-
-                    <textarea
-                        id="userText"
-                        placeholder="Ingresar texto"
-                        maxlength="1000"
-                        rows="7"
-                    ></textarea>
-
-                    <div class="text-input-footer">
-                        <small id="characterCount">0 / 1000 caracteres</small>
-
-                        <div class="text-input-buttons">
-                            <button type="button" class="btn btn-secondary" id="clearUserText">
-                                Limpiar
-                            </button>
-                            <button type="button" class="btn btn-primary" id="showUserText">
-                                Agregar texto
-                            </button>
-                        </div>
-                    </div>
-
-                    <div class="user-text-result" id="userTextResult" hidden>
-                        <div class="result-heading">
-                            <span>Texto agregado</span>
-                            <span class="result-icon">✓</span>
-                        </div>
-                        <p id="userTextPreview"></p>
-                        <small>Traducción a señas</small>
-                    </div>
-
-                    <p
-                        class="text-input-message"
-                        id="textInputMessage"
-                        role="status"
-                        aria-live="polite"
-                    ></p>
-                </div>
-
-                <div class="sign-output-card" id="signOutput" aria-live="polite">
-                    <h4>Señas</h4>
-                    <div class="sign-output-placeholder">
-                        Las señas aparecerán aquí cuando agregues un texto.
-                    </div>
-                </div>
-            </section>
-        </section>
-
-        <section class="history-section" id="historial">
-            <div class="section-title">
-                <div>
-                    <span class="section-label">04</span>
-                    <h3>Historial de traducciones</h3>
-                </div>
-                <button class="clear-history" id="clearHistory">Limpiar historial</button>
-            </div>
-
-            <div class="history-container" id="historyContainer">
-                <div class="empty-history" id="emptyHistory">
-                    <span>📝</span>
-                    <p>Aún no hay traducciones.</p>
-                    <small>Las señas detectadas aparecerán aquí.</small>
-                </div>
-            </div>
-        </section>
-
-        <section class="info-section" id="informacion">
-            <div class="info-card">
-                <div class="info-icon">💡</div>
-                <div>
-                    <h3>¿Cómo funciona?</h3>
-                    <p>
-                        Señas AI utiliza la cámara de tu dispositivo para capturar los movimientos
-                        de las manos y posteriormente procesarlos mediante un modelo de inteligencia
-                        artificial capaz de reconocer lenguaje de señas.
-                    </p>
-                </div>
-            </div>
-        </section>
-
-        <div data-shared="footer"></div>
-    </main>
-
-    <script src="js/shared-layout.js"></script>
-    <script src="js/app.js" defer></script>
+<script src="js/app.js"></script>
 </body>
 </html>
