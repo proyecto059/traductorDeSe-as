@@ -31,7 +31,7 @@
 <header class="nav">
   <div class="wrap nav-in">
     <a class="brand" href="#traductor"><img src="assets/img/logo.svg" width="32" height="32" alt=""><span>Señas<b>AI</b></span></a>
-    <nav aria-label="Principal"><a href="#traductor">Traductor</a><a href="#acerca">Acerca del proyecto</a></nav>
+    <nav aria-label="Principal"><a href="#traductor">Traductor</a><a href="#acerca"><span class="nav-long">Acerca del proyecto</span><span class="nav-short">Acerca de</span></a></nav>
   </div>
 </header>
 
@@ -91,20 +91,19 @@
 <section class="about" id="acerca" aria-labelledby="acT">
   <div class="wrap">
     <h2 id="acT">Acerca del proyecto</h2>
-    <div class="about-grid">
-      <article class="info"><span class="ico"><svg class="ic"><use href="#i-info"/></svg></span><h3>¿Qué es SeñasAI?</h3>
-        <p>Una plataforma web para facilitar la comunicación entre personas sordas y oyentes mediante la Lengua de Señas Mexicana (LSM).</p></article>
-      <article class="info"><span class="ico"><svg class="ic"><use href="#i-target"/></svg></span><h3>Objetivo</h3>
-        <p>Desarrollar una herramienta tecnológica que traduzca entre LSM y español usando inteligencia artificial y visión artificial.</p></article>
-      <article class="info"><span class="ico"><svg class="ic"><use href="#i-users"/></svg></span><h3>Accesibilidad e inclusión</h3>
-        <p>Las barreras de comunicación limitan el acceso a la educación, la salud y el trabajo. Esta herramienta busca reducirlas.</p></article>
-    </div>
-    <div class="about-grid about-grid-2">
-      <article class="info wide"><h3>¿Cómo funciona?</h3>
-        <ul class="modes">
-          <li><span class="ico"><svg class="ic"><use href="#i-cam"/></svg></span><div><strong>Señas a texto</strong><p>La cámara captura las señas para convertirlas en texto.</p><em>La cámara ya funciona; el reconocimiento con IA está en desarrollo.</em></div></li>
-          <li><span class="ico"><svg class="ic"><use href="#i-type"/></svg></span><div><strong>Texto a señas</strong><p>Escribes una frase para obtener su representación en señas.</p><em>Ya puedes escribir el texto; las animaciones de señas están en desarrollo.</em></div></li>
-        </ul></article>
+    <div class="about-box">
+      <div class="about-top">
+        <div><h3><svg class="ic"><use href="#i-info"/></svg>¿Qué es SeñasAI?</h3>
+          <p>Plataforma web que facilita la comunicación entre personas sordas y oyentes mediante la Lengua de Señas Mexicana (LSM).</p></div>
+        <div><h3><svg class="ic"><use href="#i-target"/></svg>Objetivo</h3>
+          <p>Desarrollar una herramienta que traduzca entre LSM y español con inteligencia artificial y visión artificial.</p></div>
+        <div><h3><svg class="ic"><use href="#i-users"/></svg>Accesibilidad e inclusión</h3>
+          <p>Reducir las barreras de comunicación en la educación, la salud y el trabajo.</p></div>
+      </div>
+      <ul class="about-modes" aria-label="Cómo funciona">
+        <li><svg class="ic"><use href="#i-cam"/></svg><p><strong>Señas a texto:</strong> la cámara captura las señas y las convierte en texto. <em>Cámara disponible; reconocimiento con IA en desarrollo.</em></p></li>
+        <li><svg class="ic"><use href="#i-type"/></svg><p><strong>Texto a señas:</strong> escribes una frase y obtienes su representación en señas. <em>Texto disponible; animaciones en desarrollo.</em></p></li>
+      </ul>
     </div>
   </div>
 </section>
